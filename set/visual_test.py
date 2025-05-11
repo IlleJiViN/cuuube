@@ -3,7 +3,12 @@ from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import rubikcube as a
+import time
+import threading
+print("확인확인")
 # 회전 메서드 리스트        q w r a s d f u b v l g 완성
+
+thread = []
 method = [
     a.a.vertical_switch_up_left,
     a.a.vertical_switch_up_right,
@@ -29,7 +34,27 @@ colors = {
     '4': (1, 1, 1),     # 윗면 - 흰색
     '5': (1, 1, 0),     # 아랫면 - 노랑
 }
-
+def count_leaf_elements(data):
+    if isinstance(data, list):
+        return sum(count_leaf_elements(item) for item in data)
+    else:
+        return 1  # 리스트가 아니면 최소 단위니까 1
+def scan_all_elements(data):
+    if isinstance(data, list):
+        for item in data:
+            yield from scan_all_elements(item)
+    else:
+        yield data
+def cube_test_switch(data):
+    data_map = data
+    for cubb in scan_all_elements(data_map):
+        a.a.cube = cubb.cube_class.cube
+        time.sleep(100000000000/count_leaf_elements(data_map))
+def cube_test_switch_activation(li):
+    print("작동해라")
+    t1 = threading.Thread(target=cube_test_switch, args=(li,))
+    t1.start()
+    
 
 # 큐브 객체
 cube = a.a
@@ -152,7 +177,8 @@ def main():
                 rx += dy * 0.5
                 ry += dx * 0.5
                 last_pos = (x, y)
-            elif event.type == KEYDOWN:
+             
+            elif event.type == KEYDOWN and  __name__ == "__main__": 
                 keymap = {
                     K_r: "R", K_l: "L", K_u: "U",
                     K_d: "D", K_f: "F", K_b: "B",
@@ -164,11 +190,6 @@ def main():
                     p = list(keymap).index(event.key)
                     print(p)
                     method[p]()  # 함수 실행
-                    is_valid = a.a.check_cube_validity()  # 큐브가 유효한지 확인
-                    if not is_valid:
-                        print("큐브에 문제가 있습니다!")
-                    else:
-                        print("정상인듯?")
                     log_action(keymap[event.key])
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -180,5 +201,5 @@ def main():
         glPopMatrix()
         pygame.display.flip()
         clock.tick(60)
-
-main()
+t2 = threading.Thread(target=main, args=())
+t2.start() 
