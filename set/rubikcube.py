@@ -1,5 +1,5 @@
 from collections import Counter
-class Cube:             #큐브 윗면 5번째 앞면 1, 그 오른쪽 2 그 오른쪽 3 그 오른쪽 4 밑면 6
+class Cube:             #큐브 윗면 5번째 앞면 1, 그 오른쪽 2 그 오른쪽 3 그 오른쪽 4 밑면 6 # 또 머하지
     
     def __init__(self, mix = None):
         self.mid_list = list()
