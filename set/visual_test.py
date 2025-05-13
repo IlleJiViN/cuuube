@@ -49,7 +49,8 @@ def cube_test_switch(data):
     data_map = data
     for cubb in scan_all_elements(data_map):
         a.a.cube = cubb.cube_class.cube
-        time.sleep(100000000000/count_leaf_elements(data_map))
+        time.sleep(0.001)
+        #time.sleep(2/count_leaf_elements(data_map))
 def cube_test_switch_activation(li):
     print("작동해라")
     t1 = threading.Thread(target=cube_test_switch, args=(li,))

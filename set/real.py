@@ -89,7 +89,8 @@ if __name__ == "__main__":               # 트리 3차원 구조임 유의할것
     #print(len(cl_list))
     #print(len(cl_list[1]))
     #print(count_leaf_elements(cl_list))
-
+    spread(3)
+    spread(4)
     #spread(3)
 
     #print(cl_list)
