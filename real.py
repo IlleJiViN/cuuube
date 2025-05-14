@@ -2,7 +2,7 @@ import rubikcube as r_b
 import copy
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-
+width = 6
 class TreePlotter:
     def __init__(self):
         self.fig, self.ax = plt.subplots(figsize=(10, 6))
@@ -22,7 +22,6 @@ class TreePlotter:
                 # Draw line
                 self.ax.plot([x, x_child], [y - 0.2, y_child + 0.2], 'k-')
                 self.plot_tree(item, x_child, y_child, dx / 2, level + 1)
-
 def visualize_nested_list(data):
     tree = TreePlotter()
     tree.plot_tree(data)
@@ -51,6 +50,8 @@ class Tree:
         self.move = move
         self.cost = depth
         self.estimated_cost = self.cost #+ self.heuristic()
+        self.score = self.huristic()
+        print(self.score)
     def generate_offspring(self):
         children = []
         for a in range(12):
@@ -62,17 +63,39 @@ class Tree:
         return children
     def backtracking(self):
         return("my parent is  " + str(self.parent))
+
+    def huristic(self):
+        mapped = get_mapped_cube(self.cube_class.cube)
+        score = 0
+        for face in mapped:
+            for i, sticker in enumerate(face):
+                if sticker == chr(ord('A') + i):
+                    score += 1
+        return score
+
+        for i in self.cube_class.cube:
+            print(i)
 def spread(stage):
     my_precious_list = cl_list[stage-1]
     #print(str(len(my_precious_list)) + "소중하구나")
     #print(my_precious_list)
+    highest_score = 0
     for i in range(len(my_precious_list)):
-        for a in range(12):
-            cl_list[stage].append(my_precious_list[i][a].generate_offspring())
-            #cl_list[stage].append(my_precious_list[stage][i].generate_offspring())
+        for a in range(len(my_precious_list[i])):
+            if  highest_score-width <= my_precious_list[i][a].score <= highest_score:
+                cl_list[stage].append(my_precious_list[i][a].generate_offspring())
+            #cl_list[stage].append(my_precious_list[stage][i].generate_offspring())    # 5월 14일에 하다 말음 고칠것!
+
+def get_mapped_cube(cube):
+    mapped = []
+    for face in cube:
+        new_face = [s[1] for s in face]  # '0A' → 'A'
+        mapped.append(new_face)
+    return mapped
 if __name__ == "__main__":               # 트리 3차원 구조임 유의할것  # extend 아니라 append 써서 한 집단의 부모 노드는 모두 같음 의도한건 아니고 extend 존재를 몰랐음
+
     #깊이 1
-    cl_list[0].append(Tree(r_b.Cube()))
+    cl_list[0].append(Tree(r_b.Cube("df")))
     #깊이 2
     cl_list[1].append(cl_list[0][0].generate_offspring())
     #print(cl_list[1])
@@ -85,9 +108,30 @@ if __name__ == "__main__":               # 트리 3차원 구조임 유의할것
     #print(len(cl_list))
     #print(len(cl_list[1]))
     #print(count_leaf_elements(cl_list))
-
+    spread(3)
+    #spread(4)
     #spread(3)
 
     #print(cl_list)
     print(count_leaf_elements(cl_list))
     #visualize_nested_list(cl_list)
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if True: # 시각 테스트용
+    print("asdfjkhasdkjfads")
+    import visual_test
+    visual_test.cube_test_switch_activation(cl_list)
+    
